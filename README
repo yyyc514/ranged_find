@@ -1,0 +1,23 @@
+WHAT IS IT?
+===========
+
+Allows you to easily do find and counts based on date ranges.
+
+You can either pass a symbol:
+
+  :today, :yesterday, :last_year, :this_year, :this_month, :last_month, :month_to_date
+  
+Or you can pass a range:
+
+  (Time.now-5.days, Time.now+5.days)
+
+
+Examples
+--------
+
+  Book.count(:when => :yesterday) # defaults filtering based on created_at if field isn't specified
+
+  Book.count(:when => :this_month, :when_field => :updated_at)
+
+  Book.find(:when => (Date.new(2002),Date.local(2006)), :when_field => :deleted_at)
+
