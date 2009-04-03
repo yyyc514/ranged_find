@@ -2,8 +2,8 @@ module Dreamer3 # :nodoc:
   module RangedFind # :nodoc:
    
    module ClassMethods
-     
-     def count(*args)
+
+     def count_with_when(*args)
        options=begin
          if args.is_a? Array
            if args[0].is_a? Hash
@@ -19,12 +19,12 @@ module Dreamer3 # :nodoc:
        if (range=options.delete(:when))
          options[:when_field] ||= :created_at
          when_field=options.delete(:when_field)
-         with_dated_scope(when_field, range) { super(*args) }
+         with_dated_scope(when_field, range) { count_without_when(*args) }
        else
-         super(*args)
+         count_without_when(*args)
        end
      end
-     
+   
      def find_with_when(*args)
        options=begin
          if args.is_a? Array
