@@ -88,7 +88,7 @@ module Dreamer3 # :nodoc:
            conditions << Time.zone.now.beginning_of_month
            conditions << Time.zone.now.next_month.beginning_of_month
          when :last_month
-           conditions << Time.zone.now.last_month.beginning_of_month
+           conditions << Time.zone.now.prev_month.beginning_of_month
            conditions << Time.zone.now.beginning_of_month
          # calcuates the count of last month, but only as far as we are in the current month
          # so if we're half way thru April, then this will only show the stats as of half way thru March
@@ -96,9 +96,9 @@ module Dreamer3 # :nodoc:
            end_of_this_month=(Time.zone.now.next_month.beginning_of_month-1.day).mday
            end_of_last_month=(Time.zone.now.beginning_of_month-1.day).mday
            ratio=Time.zone.now.mday.to_f/end_of_this_month
-           end_date=Time.zone.now.last_month.beginning_of_month.midnight+(ratio*end_of_last_month).days
+           end_date=Time.zone.now.prev_month.beginning_of_month.midnight+(ratio*end_of_last_month).days
 
-           conditions << Time.zone.now.last_month.beginning_of_month
+           conditions << Time.zone.now.prev_month.beginning_of_month
            conditions << end_date
          end
        end
