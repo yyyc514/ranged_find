@@ -3,63 +3,20 @@ module Dreamer3 # :nodoc:
    
    module ClassMethods
 
-     def count_with_when(*args)
-       options=begin
-         if args.is_a? Array
-           if args[0].is_a? Hash
-             args[0]
-           elsif args[1].is_a? Hash
-             args[1]
-           end
-         elsif args.is_a? Hash
-           args
-         end
-       end
-       options ||= {}
-       if (range=options.delete(:when))
-         options[:when_field] ||= :created_at
-         when_field=options.delete(:when_field)
-         with_dated_scope(when_field, range) { count_without_when(*args) }
-       else
-         count_without_when(*args)
-       end
+     def when(range, field = "created_at")
+       return self if range.nil?
+       field = "#{table_name}.#{field}" unless field.to_s.include?(".")
+       self.scoped(:conditions => date_range_conditions(field, range))
      end
-   
-     def find_with_when(*args)
-       options=begin
-         if args.is_a? Array
-           if args[0].is_a? Hash
-             args[0]
-           elsif args[1].is_a? Hash
-             args[1]
-           end
-         elsif args.is_a? Hash
-           args
-         end
-       end
-       options ||= {}
-       if (range=options[:when])
-         options.delete(:when)
-         options[:when_field] ||= :created_at
-         when_field=options.delete(:when_field)
-         with_dated_scope(when_field, range) { find_without_when(*args) }
-       else
-         find_without_when(*args)
-       end
-     end
-
+     
      # scopes a class to a given time range on a specific date field
      #
-     # with_dated_scope :books, :created_at, :this_year
-     # with_dated_scope :books, :updated_at, :this_month
+     # Book.with_dated_scope :this_year
+     # Book.with_dated_scope :this_month, :updated_at
      #
-     def with_dated_scope(date_field, time_range)
-       if date_field.to_s.include? "."
-         field = date_field
-       else
-         field = "#{table_name}.#{date_field}"
-       end
-       with_scope(:find => {:conditions => date_range_conditions(field, time_range) } ) do 
+     def with_dated_scope(range, field = "created_at")
+       field = "#{table_name}.#{field}" unless field.to_s.include?(".")
+       with_scope(:find => {:conditions => date_range_conditions(field, range) } ) do 
          yield
        end
      end
