@@ -1,0 +1,2 @@
+* Yes, the performance of that hash/lambda is probably awful.  Need to just
+  break it back into a case statement.
