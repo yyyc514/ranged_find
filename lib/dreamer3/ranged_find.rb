@@ -1,7 +1,7 @@
 module Dreamer3 # :nodoc:
   module RangedFind # :nodoc:
     
-    DATE_RANGES={
+    DATE_RANGES = lambda {{
           # daily
           :yesterday => [ Time.zone.now.yesterday.midnight, 1.day ],
           :today => [ Time.zone.now.midnight, 1.day ],
@@ -14,7 +14,7 @@ module Dreamer3 # :nodoc:
           :last_month => [ Time.zone.now.prev_month.beginning_of_month, 1.month ],
           :this_month => [ Time.zone.now.beginning_of_month, 1.month ],
           :next_month => [ Time.zone.now.next_month.beginning_of_month, 1.month ],
-        }
+        }}
    
    module ClassMethods
 
@@ -32,7 +32,7 @@ module Dreamer3 # :nodoc:
        if time_range.is_a?(Range)
          conditions << time_range.begin
          conditions << time_range.end
-       elsif range=DATE_RANGES[time_range]
+       elsif range=DATE_RANGES.call[time_range]
          conditions << range.first
          conditions << (range.last===Time ? range.last : range.first + range.last)
        else

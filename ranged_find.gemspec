@@ -5,7 +5,7 @@ $spec = Gem::Specification.new do |s|
   s.email = "me@joshgoebel.com"
   s.homepage = "https://github.com/yyyc514/ranged_find"
   s.name = 'ranged_find'
-  s.version = "0.1"
+  s.version = "0.2"
   s.requirements << 'none'
   s.autorequire = 'ranged_find'
   
