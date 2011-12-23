@@ -1,23 +1,24 @@
 WHAT IS IT?
 ===========
 
-Allows you to easily do find and counts based on date ranges.
+Allows you to easily do queries based on date ranges.
 
 You can either pass a symbol:
 
-  :today, :yesterday, :last_year, :this_year, :this_month, :last_month, :month_to_date
+  :today, :yesterday, :last_year, :this_year, :next_year, :this_month, 
+	:last_month, :next_month, :month_to_date
   
 Or you can pass a range:
 
-  (Time.now-5.days, Time.now+5.days)
+  5.days.ago .. 10.days.from_now
 
 
 Examples
 --------
 
-  Book.count(:when => :yesterday) # defaults filtering based on created_at if field isn't specified
+  Book.when(:yesterday).count # defaults filtering based on created_at field
 
-  Book.count(:when => :this_month, :when_field => :updated_at)
+  Book.when(:this_month,:updated_at).count 
 
-  Book.find(:when => (Date.new(2002),Date.local(2006)), :when_field => :deleted_at)
+  Book.when(Date.civil(2002)..Date.civil(2006),:deleted_at).count
 
