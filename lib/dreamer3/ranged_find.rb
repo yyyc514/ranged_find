@@ -28,13 +28,14 @@ module Dreamer3 # :nodoc:
      
      # returns a conditions array to scope a specific field to a certain time range
      def date_range_conditions(field, time_range)
-       conditions = ["? <= #{field} and #{field} < ?"]
+       sql = ["? <= #{field} and #{field} < ?"]
+       actual_range = []
        if time_range.is_a?(Range)
-         conditions << time_range.begin
-         conditions << time_range.end
+         actual_range << time_range.begin
+         actual_range << time_range.end
        elsif range=DATE_RANGES.call[time_range]
-         conditions << range.first
-         conditions << (range.last===Time ? range.last : range.first + range.last)
+         actual_range << range.first
+         actual_range << (range.last===Time ? range.last : range.first + range.last)
        else
          case time_range
          # calcuates the count of last month, but only as far as we are in the current month
@@ -45,13 +46,17 @@ module Dreamer3 # :nodoc:
            ratio=Time.zone.now.mday.to_f/end_of_this_month
            end_date=Time.zone.now.prev_month.beginning_of_month.midnight+(ratio*end_of_last_month).days
 
-           conditions << Time.zone.now.prev_month.beginning_of_month
-           conditions << end_date
+           actual_range << Time.zone.now.prev_month.beginning_of_month
+           actual_range << end_date
          else
            raise "invalid date range provided"
          end
        end
-       conditions
+       # date
+       if field =~ /_on$/
+         actual_range = actual_range.map {|x| x.to_date}
+       end
+       sql + actual_range
      end
     
     end
